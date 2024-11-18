@@ -1,0 +1,103 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Car {
+    String carName;
+    boolean isAvailable;
+
+    Car(String carName) {
+        this.carName = carName;
+        this.isAvailable = true;
+    }
+}
+
+public class CarRentalManagementSystem {
+    private static ArrayList<Car> cars = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        initializeCars();
+        int choice;
+
+        do {
+            System.out.println("\n--- Car Rental Management System ---");
+            System.out.println("1. View Available Cars");
+            System.out.println("2. Rent a Car");
+            System.out.println("3. Return a Car");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Clear the buffer
+
+            switch (choice) {
+                case 1 -> viewAvailableCars();
+                case 2 -> rentCar();
+                case 3 -> returnCar();
+                case 4 -> System.out.println("Thank you for using the Car Rental System!");
+                default -> System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 4);
+    }
+
+    private static void initializeCars() {
+        cars.add(new Car("Honda Civic"));
+        cars.add(new Car("Toyota Corolla"));
+        cars.add(new Car("Ford Mustang"));
+        cars.add(new Car("Tesla Model 3"));
+    }
+
+    private static void viewAvailableCars() {
+        System.out.println("\nAvailable Cars:");
+        boolean hasAvailableCars = false;
+        for (int i = 0; i < cars.size(); i++) {
+            if (cars.get(i).isAvailable) {
+                System.out.println((i + 1) + ". " + cars.get(i).carName);
+                hasAvailableCars = true;
+            }
+        }
+        if (!hasAvailableCars) {
+            System.out.println("No cars available at the moment.");
+        }
+    }
+
+    private static void rentCar() {
+        viewAvailableCars();
+        System.out.print("\nEnter the number of the car you want to rent: ");
+        int carNumber = scanner.nextInt();
+        scanner.nextLine(); // Clear the buffer
+
+        if (carNumber > 0 && carNumber <= cars.size() && cars.get(carNumber - 1).isAvailable) {
+            cars.get(carNumber - 1).isAvailable = false;
+            System.out.println("You have successfully rented: " + cars.get(carNumber - 1).carName);
+        } else {
+            System.out.println("Invalid selection or car is not available.");
+        }
+    }
+
+    private static void returnCar() {
+        System.out.println("\nRented Cars:");
+        boolean hasRentedCars = false;
+        for (int i = 0; i < cars.size(); i++) {
+            if (!cars.get(i).isAvailable) {
+                System.out.println((i + 1) + ". " + cars.get(i).carName);
+                hasRentedCars = true;
+            }
+        }
+
+        if (!hasRentedCars) {
+            System.out.println("No cars are currently rented.");
+            return;
+        }
+
+        System.out.print("\nEnter the number of the car you want to return: ");
+        int carNumber = scanner.nextInt();
+        scanner.nextLine(); // Clear the buffer
+
+        if (carNumber > 0 && carNumber <= cars.size() && !cars.get(carNumber - 1).isAvailable) {
+            cars.get(carNumber - 1).isAvailable = true;
+            System.out.println("You have successfully returned: " + cars.get(carNumber - 1).carName);
+        } else {
+            System.out.println("Invalid selection or car is already available.");
+        }
+    }
+}
